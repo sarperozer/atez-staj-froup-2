@@ -19,7 +19,9 @@ router.get('/:id', async function(req, res, next) {
 });
 
 router.post('/signup', async function(req, res) {
-  const { username, password, name, surname, email } = req.body;
+  const { username, password, name, surname, email, userType } = req.body;
+
+  // userType = user | company
 
   if (!email && !password) {
     return res.status(400).send({
@@ -40,7 +42,7 @@ router.post('/signup', async function(req, res) {
   const cryptedPassword = await bcrypt.hash(password, 8);
 
   await db('users').insert(
-    { username, password: cryptedPassword, name, surname, email }
+    { username, password: cryptedPassword, name, surname, email, userType }
   )
 
   return res.status(201).send({
