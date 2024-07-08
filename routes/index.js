@@ -1,4 +1,5 @@
 var express = require('express');
+const db = require('../db/knex.db');
 var router = express.Router();
 
 /* GET home page. */
