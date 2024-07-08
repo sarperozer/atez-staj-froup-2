@@ -5,7 +5,7 @@ verifyAuth => jwt token authentication
 
 - USER DB QUERY
 
-sh```
+```sh
 create table if not exists atezstaj.users
 (
     id       int auto_increment
