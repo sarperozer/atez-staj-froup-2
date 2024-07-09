@@ -113,6 +113,8 @@ router.post('/delete', async function(req, res) {
   await db('users').del().where('email', email);
 })
 
+
+
 // asynchronous
 // async - await
 // Promise
