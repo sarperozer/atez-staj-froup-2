@@ -6,15 +6,15 @@ const jwt = require('jsonwebtoken');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/', verifyAuth, async function(req, res, next) {
+router.get('/list', verifyAuth, async function(req, res, next) {
   const user = req.user;
   const usersData = await db('users').select('*');
   res.json(usersData);
 });
 
 /* GET users listing. */
-router.get('/:id', async function(req, res, next) {
-  const usersData = await db('users').select('*');
+router.get('/list/:id', async function(req, res, next) {
+  const usersData = await db('users').select('id');
   res.json(usersData);
 });
 
@@ -30,7 +30,6 @@ router.post('/signup', async function(req, res) {
   };
 
   const user = await db('users').select('*').where('email', email).first();
-  const a = await db('users')
 
   console.log('USER', user)
 
@@ -73,7 +72,9 @@ router.post('/login', async function(req, res) {
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    return res.status.send('email or password is wrong')
+    return res.status(400).send({
+      message: 'There is no account with given email'
+    })
   }
 
   const token = jwt.sign({ email: email }, process.env.SECRET_KEY);
