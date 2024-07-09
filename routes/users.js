@@ -13,13 +13,13 @@ router.get('/list', verifyAuth, async function(req, res, next) {
 });
 
 /* GET users listing. */
-router.get('/list/:id', async function(req, res, next) {
+router.get('/list/:id', verifyAuth, async function(req, res, next) {
   const usersData = await db('users').select('id');
   res.json(usersData);
 });
 
 router.post('/signup', async function(req, res) {
-  const { username, password, name, surname, email } = req.body;
+  const { username, password, name, surname, email, userType } = req.body;
 
   // userType = user | company
 
@@ -42,7 +42,7 @@ router.post('/signup', async function(req, res) {
   const cryptedPassword = await bcrypt.hash(password, 8);
 
   await db('users').insert(
-    { username, password: cryptedPassword, name, surname, email }
+    { username, password: cryptedPassword, name, surname, email, userType }
   )
 
   return res.status(201).send({
@@ -101,8 +101,6 @@ router.post('/delete', async function(req, res) {
       message: 'There is no account with given email'
     })
   };
-
-  console.log('USER', user);
 
   const isMatch = await bcrypt.compare(password, user.password);
 

@@ -18,5 +18,4 @@ function verifyAuth(req, res, next) {
         res.status(400).send('Invalid token')
     }
 }
-
 module.exports = verifyAuth;
