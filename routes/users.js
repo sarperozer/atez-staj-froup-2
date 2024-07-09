@@ -19,7 +19,7 @@ router.get('/:id', async function(req, res, next) {
 });
 
 router.post('/signup', async function(req, res) {
-  const { username, password, name, surname, email, userType } = req.body;
+  const { username, password, name, surname, email } = req.body;
 
   // userType = user | company
 
@@ -30,6 +30,7 @@ router.post('/signup', async function(req, res) {
   };
 
   const user = await db('users').select('*').where('email', email).first();
+  const a = await db('users')
 
   console.log('USER', user)
 
@@ -42,7 +43,7 @@ router.post('/signup', async function(req, res) {
   const cryptedPassword = await bcrypt.hash(password, 8);
 
   await db('users').insert(
-    { username, password: cryptedPassword, name, surname, email, userType }
+    { username, password: cryptedPassword, name, surname, email }
   )
 
   return res.status(201).send({
@@ -81,6 +82,34 @@ router.post('/login', async function(req, res) {
     message: 'successfully logged in',
     token
   });
+})
+
+router.post('/delete', async function(req, res) {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).send({
+      message: 'email or password is missing'
+    })
+  };
+
+  const user = await db('users').select('*').where('email', email).first();
+
+  if (!user) {
+    return res.status(400).send({
+      message: 'There is no account with given email'
+    })
+  };
+
+  console.log('USER', user);
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    return res.status.send('email or password is wrong')
+  }
+
+  await db('users').del().where('email', email);
 })
 
 // asynchronous
