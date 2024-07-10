@@ -13,9 +13,8 @@ router.get('/list', verifyAuth, verifyCompany, async function(req, res, next) {
 });
 
 /* GET users listing. */
-router.post('/list/:id', verifyAuth, verifyCompany, async function(req, res, next) {
-  const {userId} = req.body;
-  const usersData = await db('users').select('*').where("id", userId);
+router.get('/list/:id', verifyAuth, verifyCompany, async function(req, res, next) {
+  const usersData = await db('users').select('*').where("id", req.params.id);
   res.json(usersData);
 });
 
@@ -78,7 +77,7 @@ router.post('/login', async function(req, res) {
     })
   }
 
-  const token = jwt.sign({ email: email, userType: user.userType }, process.env.SECRET_KEY);
+  const token = jwt.sign({  id: user.id, email: email, userType: user.userType }, process.env.SECRET_KEY);
 
   return res.status(200).send({
     message: 'successfully logged in',
@@ -87,7 +86,6 @@ router.post('/login', async function(req, res) {
 })
 
 router.post('/delete/:id', verifyAuth, verifyCompany, async function(req, res) {
-  const { userId } = req.body;
 
   if (!userId) {
     return res.status(400).send({
@@ -95,7 +93,7 @@ router.post('/delete/:id', verifyAuth, verifyCompany, async function(req, res) {
     })
   };
   
-  await db('users').del().where('id', userId);
+  await db('users').del().where('id', req.params.id);
 })
 
 

@@ -45,9 +45,8 @@ router.post('/add',verifyAuth, verifyCompany, async function(req, res) {
 
   //Deleting Existing Product
   router.post('/delete/:id',verifyAuth, verifyCompany, async function(req, res) {
-    const { userId } = req.body;
   
-    const product = await db('products').select('*').where('id', userId);
+    const product = await db('products').select('*').where('id', req.params.id);
   
     if (!product) {
       return res.status(400).send({
@@ -55,7 +54,7 @@ router.post('/add',verifyAuth, verifyCompany, async function(req, res) {
       })
     };
   
-    await db('products').del().where('id', userId);
+    await db('products').del().where('id', req.params.id);
 
     return res.status(201).send({
       message: 'Succesfully deleted a product',
@@ -71,8 +70,7 @@ router.get('/list', verifyAuth, async function(req, res, next) {
 
 /* GET products listing. */
 router.get('/list/:id', verifyAuth, async function(req, res, next) {
-  const userId = req.body;
-  const productData = await db('products').select('*').where("id", userId);
+  const productData = await db('products').select('*').where("id", req.params.id);
   res.json(productData);
 });
 
