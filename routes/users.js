@@ -3,6 +3,7 @@ const {db} = require('../db/knex.db');
 const bcrypt = require('bcryptjs');
 const verifyAuth = require('./auth');
 const jwt = require('jsonwebtoken');
+const verifyCompany = require('./auth');
 var router = express.Router();
 
 /* GET users listing. */
@@ -13,8 +14,9 @@ router.get('/list', verifyAuth, async function(req, res, next) {
 });
 
 /* GET users listing. */
-router.get('/list/:id', verifyAuth, async function(req, res, next) {
-  const usersData = await db('users').select('id');
+router.post('/list/:id', verifyAuth, verifyCompany, async function(req, res, next) {
+  const {userId} = req.body;
+  const usersData = await db('users').select('*').where("id", userId);
   res.json(usersData);
 });
 
@@ -85,30 +87,16 @@ router.post('/login', async function(req, res) {
   });
 })
 
-router.post('/delete', async function(req, res) {
-  const { email, password } = req.body;
+router.post('/delete/:id', verifyAuth, verifyCompany, async function(req, res) {
+  const { userId } = req.body;
 
-  if (!email || !password) {
+  if (!userId) {
     return res.status(400).send({
-      message: 'email or password is missing'
+      message: 'Please give user id'
     })
   };
-
-  const user = await db('users').select('*').where('email', email).first();
-
-  if (!user) {
-    return res.status(400).send({
-      message: 'There is no account with given email'
-    })
-  };
-
-  const isMatch = await bcrypt.compare(password, user.password);
-
-  if (!isMatch) {
-    return res.status.send('email or password is wrong')
-  }
-
-  await db('users').del().where('email', email);
+  
+  await db('users').del().where('id', userId);
 })
 
 
