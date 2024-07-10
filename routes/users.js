@@ -1,15 +1,14 @@
 var express = require('express');
 const {db} = require('../db/knex.db');
 const bcrypt = require('bcryptjs');
-const verifyAuth = require('./auth');
 const jwt = require('jsonwebtoken');
-const verifyCompany = require('./auth');
+const { verifyAuth, verifyCompany } = require('./auth');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/list', verifyAuth, async function(req, res, next) {
+router.get('/list', verifyAuth, verifyCompany, async function(req, res, next) {
   const user = req.user;
-  const usersData = await db('users').select('*');
+  const usersData = await db('users').select('email', 'name', 'surname');
   res.json(usersData);
 });
 

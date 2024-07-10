@@ -2,7 +2,8 @@ var express = require('express');
 const {db} = require('../db/knex.db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { verifyAuth, verifyCompany } = require('./auth');
+const verifyAuth = require('./auth');
+const verifyCompany = require('./auth');
 var router = express.Router();
 
 //Adding New Product

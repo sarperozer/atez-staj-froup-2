@@ -1,5 +1,14 @@
 const jwt = require('jsonwebtoken');
 
+function verifyCompany(req, res, next) {
+    if (req.user.userType !== 'company') {
+        return res.status(403).send({
+            message: 'Access denied. Only companies can perform this action.'
+        });
+    }
+    next();
+  }
+
 function verifyAuth(req, res, next) {
     const token = req.header('Authorization').replace('Bearer ', '');
 
@@ -19,5 +28,7 @@ function verifyAuth(req, res, next) {
     }
 }
 
-module.exports = verifyAuth;
-//module.exports = verifyCompany;
+module.exports = {
+    verifyAuth,
+    verifyCompany
+};
