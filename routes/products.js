@@ -3,9 +3,12 @@ const {db} = require('../db/knex.db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const verifyAuth = require('./auth');
+const verifyCompany = require('./auth');
 var router = express.Router();
 
-router.post('/add',verifyAuth, async function(req, res) {
+
+//Adding New Product
+router.post('/add',verifyAuth, verifyCompany, async function(req, res) {
     const { name, price, stock } = req.body;
 
     await db('products').insert(
@@ -17,7 +20,8 @@ router.post('/add',verifyAuth, async function(req, res) {
     })
   });
 
-  router.post('/update',verifyAuth, async function(req, res) {
+  //Updating Existing Product
+  router.post('/update',verifyAuth, verifyCompany, async function(req, res) {
     const { name, newPrice, newStock } = req.body;
 
     const product = await db('products').select('*').where('name', name).first();
@@ -36,7 +40,8 @@ router.post('/add',verifyAuth, async function(req, res) {
     })
   });
 
-  router.post('/delete',verifyAuth, async function(req, res) {
+  //Deleting Existing Product
+  router.post('/delete',verifyAuth, verifyCompany, async function(req, res) {
     const { name } = req.body;
   
     const product = await db('products').select('*').where('name', name);
@@ -49,5 +54,25 @@ router.post('/add',verifyAuth, async function(req, res) {
   
     await db('products').del().where('name', name);
   })
+
+
+  /* GET products listing. */
+router.get('/list', verifyAuth, async function(req, res, next) {
+  const productData = await db('products').select('*');
+  res.json(productData);
+});
+
+/* GET products listing. */
+router.get('/list/:id', verifyAuth, async function(req, res, next) {
+  const productData = await db('products').select('id');
+  res.json(productData);
+});
+
+/* GET products listing. */
+router.post('/list/:searchParam', verifyAuth, async function(req, res, next) {
+  const {name} = req.body;
+  const productData = await db('products').select('*').where("name", name);
+  res.json(productData);
+});
 
   module.exports = router;

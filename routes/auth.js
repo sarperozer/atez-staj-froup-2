@@ -18,4 +18,15 @@ function verifyAuth(req, res, next) {
         res.status(400).send('Invalid token')
     }
 }
+
+function verifyCompany(req, res, next) {
+    if (req.user.userType !== 'company') {
+        return res.status(403).send({
+            message: 'Access denied. Only companies can perform this action.'
+        });
+    }
+    next();
+  }
+
 module.exports = verifyAuth;
+module.exports = verifyCompany;
