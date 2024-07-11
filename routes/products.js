@@ -19,10 +19,10 @@ router.post('/add',verifyAuth, verifyCompany, async function(req, res) {
   });
 
   //Updating Existing Product
-  router.post('/update',verifyAuth, verifyCompany, async function(req, res) {
-    const { userId, newPrice, newStock } = req.body;
+  router.patch('/update',verifyAuth, verifyCompany, async function(req, res) {
+    const { productId, newPrice, newStock } = req.body;
 
-    const product = await db('products').select('*').where('id', userId).first();
+    const product = await db('products').select('*').where('id', productId).first();
 
     if (!product) {
       return res.status(400).send({
@@ -35,8 +35,8 @@ router.post('/add',verifyAuth, verifyCompany, async function(req, res) {
         message: 'Please enter new price and new stock number!'
       })
     }
-    await db("products").where('name', name).update("price", newPrice);
-    await db("products").where('name', name).update("stock", newStock);
+    await db("products").where('id', productId).update("price", newPrice);
+    await db("products").where('id', productId).update("stock", newStock);
   
     return res.status(201).send({
       message: 'Succesfully updated the product',
@@ -44,7 +44,7 @@ router.post('/add',verifyAuth, verifyCompany, async function(req, res) {
   });
 
   //Deleting Existing Product
-  router.post('/delete/:id',verifyAuth, verifyCompany, async function(req, res) {
+  router.delete('/delete/:id',verifyAuth, verifyCompany, async function(req, res) {
   
     const product = await db('products').select('*').where('id', req.params.id);
   

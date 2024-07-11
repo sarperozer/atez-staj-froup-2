@@ -25,7 +25,7 @@ router.post('/add',verifyAuth, async function(req, res) {
   });
 
   //Deleting Product from cart
-  router.post('/delete/:id',verifyAuth, verifyCompany, async function(req, res) {
+  router.delete('/delete/:id',verifyAuth, verifyCompany, async function(req, res) {
   
     const product = await db('carts').select('*').where('id', req.params.id);
   

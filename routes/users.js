@@ -85,7 +85,7 @@ router.post('/login', async function(req, res) {
   });
 })
 
-router.post('/delete/:id', verifyAuth, verifyCompany, async function(req, res) {
+router.delete('/delete/:id', verifyAuth, verifyCompany, async function(req, res) {
 
   if (!userId) {
     return res.status(400).send({
