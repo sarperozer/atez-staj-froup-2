@@ -1,7 +1,9 @@
 #ATEZ STAJ 2024 E-commerce App
 
 User management => /login , /signup
-verifyAuth => jwt token authentication
+Product Managment => /add,/update , /delete:id, list, list:id
+Cart Managment => /add, delete:id, /list/usr/userId, /list/cardId 
+verifyAuth, verifyCompany => jwt token authentication
 
 - USER DB QUERY
 

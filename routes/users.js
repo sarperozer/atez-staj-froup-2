@@ -31,8 +31,6 @@ router.post('/signup', async function(req, res) {
 
   const user = await db('users').select('*').where('email', email).first();
 
-  console.log('USER', user)
-
   if (user) {
     return res.status(400).send({
       message: 'you are already have an account'
@@ -67,8 +65,6 @@ router.post('/login', async function(req, res) {
     })
   };
 
-  console.log('USER', user);
-
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
@@ -95,12 +91,5 @@ router.delete('/delete/:id', verifyAuth, verifyCompany, async function(req, res)
   
   await db('users').del().where('id', req.params.id);
 })
-
-
-
-// asynchronous
-// async - await
-// Promise
-// callback
 
 module.exports = router;
