@@ -14,6 +14,12 @@ router.get('/list', verifyAuth, verifyCompany, async function(req, res, next) {
 
 /* GET users listing. */
 router.get('/list/:id', verifyAuth, verifyCompany, async function(req, res, next) {
+  if (!req.params.id) {
+    return res.status(400).send({
+      message: 'Please give user id!'
+    })
+  };
+  
   const usersData = await db('users').select('*').where("id", req.params.id);
   res.json(usersData);
 });
@@ -83,9 +89,9 @@ router.post('/login', async function(req, res) {
 
 router.delete('/delete/:id', verifyAuth, verifyCompany, async function(req, res) {
 
-  if (!userId) {
+  if (!req.params.id) {
     return res.status(400).send({
-      message: 'Please give user id'
+      message: 'Please give user id!'
     })
   };
   
