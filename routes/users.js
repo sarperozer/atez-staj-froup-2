@@ -12,14 +12,14 @@ router.get('/list', verifyAuth, verifyCompany, async function(req, res, next) {
   res.json(usersData);
 });
 
-/* GET users listing. */
+/* GET user with given id. */
 router.get('/list/:id', verifyAuth, verifyCompany, async function(req, res, next) {
   if (!req.params.id) {
     return res.status(400).send({
       message: 'Please give user id!'
     })
   };
-  
+
   const usersData = await db('users').select('*').where("id", req.params.id);
   res.json(usersData);
 });
@@ -85,8 +85,9 @@ router.post('/login', async function(req, res) {
     message: 'successfully logged in',
     token
   });
-})
+});
 
+/* Delete user with given id. */
 router.delete('/delete/:id', verifyAuth, verifyCompany, async function(req, res) {
 
   if (!req.params.id) {
@@ -96,6 +97,6 @@ router.delete('/delete/:id', verifyAuth, verifyCompany, async function(req, res)
   };
   
   await db('users').del().where('id', req.params.id);
-})
+});
 
 module.exports = router;

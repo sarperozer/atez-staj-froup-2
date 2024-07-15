@@ -80,7 +80,7 @@ router.get('/list', verifyAuth, async function(req, res, next) {
   res.json(productData);
 });
 
-/* GET products listing. */
+/* GET product info with given product id. */
 router.get('/list/:id', verifyAuth, async function(req, res, next) {
 
   if(!req.params.id){
@@ -93,7 +93,7 @@ router.get('/list/:id', verifyAuth, async function(req, res, next) {
   res.json(productData);
 });
 
-/* GET products listing. */
+/* GET product with given name. */
 router.post('/list/:searchParam', verifyAuth, async function(req, res, next) {
   const {name} = req.body;
 

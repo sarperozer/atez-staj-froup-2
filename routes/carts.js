@@ -31,32 +31,32 @@ router.post('/add',verifyAuth, async function(req, res) {
   })
 });
 
-  //Deleting Product from cart
-  router.delete('/delete/:id',verifyAuth, verifyCompany, async function(req, res) {
+//Deleting the cart with given id
+router.delete('/delete/:id',verifyAuth, verifyCompany, async function(req, res) {
 
-    if(!req.params.id){
-      return res.status(400).send({
-        message: 'id is missing'
-      })
-    }
-  
-    const product = await db('carts').select('*').where('id', req.params.id);
-  
-    if (!product) {
-      return res.status(400).send({
-        message: 'There is no product in the cart with given id'
-      })
-    };
-  
-    await db('carts').del().where('id', req.params.id);
-
-    return res.status(201).send({
-      message: 'Succesfully deleted the cart',
+  if(!req.params.id){
+    return res.status(400).send({
+      message: 'id is missing'
     })
+  }
+
+  const product = await db('carts').select('*').where('id', req.params.id);
+
+  if (!product) {
+    return res.status(400).send({
+      message: 'There is no product in the cart with given id'
+    })
+  };
+
+  await db('carts').del().where('id', req.params.id);
+
+  return res.status(201).send({
+    message: 'Succesfully deleted the cart',
   })
+})
 
 
-  /* GET cart listing. */
+/* GET cart listing. */
 router.get('/list/:cartId', verifyAuth, verifyCompany , async function(req, res, next) {
 
   if(!req.params.cartId){
@@ -69,7 +69,7 @@ router.get('/list/:cartId', verifyAuth, verifyCompany , async function(req, res,
   res.json(cartData);
 });
 
-/* GET products listing. */
+/* GET given user's cart */
 router.get('/list/usr/:userId', verifyAuth, verifyCompany, async function(req, res, next) {
   if(!req.params.userId){
     return res.status(400).send({
